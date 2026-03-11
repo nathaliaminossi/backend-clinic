@@ -11,8 +11,23 @@ export class UserController {
             const user = await userService.create({
                 name, email, password
             });
-            
+
             return res.status(201).json(user);
+
+        } catch (e: any) {
+            return res.status(400).json({
+                message: e.message
+            });
+        }
+    }
+
+    async login(req: Request, res: Response) {
+        try {
+
+            const { email, password } = req.body;
+            const userService = new UserService()
+            const login = await userService.login( email, password );
+            return  res.status(200).json(login);
 
         } catch (e: any) {
             return res.status(400).json({

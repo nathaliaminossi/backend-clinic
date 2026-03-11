@@ -1,5 +1,6 @@
 import { prisma } from '../database/prismaClient'
 import bcrypt from 'bcrypt'
+import jwt from 'jsonwebtoken'
 
 interface CreateUserDTO {
     name: string;
@@ -37,5 +38,27 @@ export class UserService {
 
         });
         return user;
+    }
+
+    async login(email: string, password: string) {
+        const emailExist = await prisma.user.findUnique({
+            where: {email: email}
+        })
+          if (!emailExist) {
+            throw new Error('Email not exists');
+        }
+
+        const passwordCompare = await bcrypt.compare( password, emailExist.password );
+          
+              if (!passwordCompare) {
+                throw new Error('incorrect password')
+        }
+
+        const token = jwt.sign(
+            {id: emailExist.id},
+            process.env.JWT_SECRET!,
+            {expiresIn: '1d'}
+        )
+        return token;
     }
 }
