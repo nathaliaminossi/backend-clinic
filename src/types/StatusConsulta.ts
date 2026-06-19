@@ -1,0 +1,1 @@
+export type StatusConsulta = "AGENDADA" | "CANCELADA" | "CONCLUIDA";

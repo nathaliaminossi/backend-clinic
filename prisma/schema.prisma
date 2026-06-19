@@ -13,22 +13,40 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-model User {
-  id        Int           @id @default(autoincrement())
-  name      String
-  email     String        @unique
-  password  String
-  createdAt DateTime      @default(now())
 
-  appointments Appointment[]
+model Medico {
+  id  Int   @id @default(autoincrement())
+  name String
+  email String  @unique
+  password String
+  specialty String
+   consultas Consulta[]
+    createdAt DateTime      @default(now())
 }
 
-model Appointment {
-  id          Int       @id @default(autoincrement())
-  date        DateTime
-  description String
-  status      String    @default("SCHEDULED")
+model Paciente {
+  id  Int   @id @default(autoincrement())
+  name String
+  email String  @unique
+  password String
+ birthDate DateTime
+ healthInsurance String
+    consultas Consulta[]
 
-  userId      Int
-  user        User      @relation(fields: [userId], references: [id])
+    createdAt DateTime      @default(now())
 }
+model Consulta {
+   id         Int      @id @default(autoincrement())
+  medicoId   Int                                       
+  medico     Medico   @relation(fields: [medicoId], references: [id])
+  pacienteId Int                                      
+  paciente   Paciente @relation(fields: [pacienteId], references: [id])
+   reason String
+  status String  
+  value Float
+ date DateTime
+ observations String?
+    createdAt DateTime      @default(now())
+}
+
+
